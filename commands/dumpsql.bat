@@ -1,1 +1,1 @@
-mysqldump -h localhost -u root db_trace > ../database/db_mfr.sql
+mysqldump -h localhost -u root db_mfr > ../database/db_mfr.sql

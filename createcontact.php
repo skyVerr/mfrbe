@@ -1,6 +1,6 @@
 <?php 
     header('Access-Control-Allow-Origin: *');
-    header('Content-type: Application/json');
+    header('Content-type: application/json');
 ?>
 
 <?php 
@@ -10,7 +10,9 @@
 
     $insert = "";
     foreach ($contact as $key => $value) {
-        $insert = $insert."$key='$value',";
+        if($value=="")continue;
+        $escaped = mysqli_escape_string($conn,$value);
+        $insert = $insert."$key='$escaped',";
     }
     $insert = substr($insert, 0, -1);
 
@@ -20,7 +22,8 @@
         echo json_encode(["message"=>"insert success"]);
     } else {
         http_response_code(403);
-        echo json_encode(["Error"=>"mysql error: ".mysqli_error($conn)]);
+        echo json_encode(["Error"=>"mysql error: ".mysqli_error($conn),
+        "sql"=>$sql]);
     }
 
 ?>
