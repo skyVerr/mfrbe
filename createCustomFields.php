@@ -6,17 +6,18 @@
 <?php 
     require_once('connection.php');
 
-    $contact = json_decode(file_get_contents('php://input'));
+    $object = json_decode(file_get_contents('php://input'),1);
 
     $insert = "";
-    foreach ($contact as $key => $value) {
-        if($value=="")continue;
-        $escaped = mysqli_escape_string($conn,$value);
-        $insert = $insert."$key='$escaped',";
+    foreach ($object['custom'] as $custom) {
+        $field = $custom['field'];
+        $value = $custom['value'];
+        $contact_id = $object['contact_id'];
+        $insert.="('$field','$value',$contact_id),";
     }
     $insert = substr($insert, 0, -1);
 
-    $sql = "INSERT INTO contacts SET $insert";
+    $sql = "INSERT INTO contacts_custom_fields(field,value,contact_id) VALUES $insert";
 
     if($conn->query($sql)){
         echo json_encode(["contact_id"=>mysqli_insert_id($conn)],JSON_NUMERIC_CHECK);
